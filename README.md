@@ -1,4 +1,4 @@
-# Starting point
+# ublue-custom
 
 [![build-ublue](https://github.com/pythoner6/ublue-custom/actions/workflows/build.yml/badge.svg)](https://github.com/pythoner6/ublue-custom/actions/workflows/build.yml)
 

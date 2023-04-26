@@ -15,15 +15,18 @@ description: A starting point for further customization of uBlue images. Make yo
 # using rpm-ostree and will be preinstalled in the final image
 rpms:
   - python3-pip # needed for yafti (the first boot installer)
+  - https://github.com/twpayne/chezmoi/releases/download/v2.33.3/chezmoi-2.33.3-x86_64.rpm
+  - neovim
+  - tpm2-tools
+  - tpm2-pkcs11
+  - podman-docker
+  - podman-compose
+  - steam-devices
 # These Flatpaks (from flathub) will be available for install on boot
 # this is just an example selection.
 # If you leave this empty you can use yafti for post-boot installation
 flatpaks:
   - org.mozilla.firefox
-  - org.mozilla.Thunderbird
-  - com.mattjakeman.ExtensionManager
-  - org.libreoffice.LibreOffice
-  - org.gnome.DejaDup
-  - org.gustavoperedo.FontDownloader
+  - org.freedesktop.Platform.ffmpeg-full
   - com.github.tchx84.Flatseal
-  - io.github.celluloid_player.Celluloid
+dotfilesRepo: git@github.com:pythoner6/dotfiles

@@ -37,6 +37,9 @@ RUN yq -i ".rpms += \"/tmp/pkcs11-provider-${PKCS11_PROVIDER_VERSION}-1.fc${FEDO
 COPY build.sh /tmp/build.sh
 RUN chmod +x /tmp/build.sh && /tmp/build.sh
 
+COPY nix.sh /tmp/nix.sh
+RUN chmod +x /tmp/nix.sh && /tmp/nix.sh
+
 # clean up and finalize container build
 RUN rm -rf \
         /tmp/* \

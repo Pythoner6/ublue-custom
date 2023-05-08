@@ -1,4 +1,5 @@
 mkdir -p /var/lib/nix
+mkdir -p /nix
 
 declare -A paths=(
 ['/nix/store/[^/]+/etc(/.*)?']=etc_t
@@ -18,3 +19,4 @@ for prefix in '' '/var/lib'; do
 done
 
 systemctl enable nix.mount
+restorecon -RF /nix

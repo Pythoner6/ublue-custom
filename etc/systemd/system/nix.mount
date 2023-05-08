@@ -4,6 +4,8 @@ DefaultDependencies=no
 After=mkdir-rootfs@nix.service
 Wants=mkdir-rootfs@nix.service
 Before=sockets.target
+Before=nix.service
+Requires=nix.service
 After=ostree-remount.service
 BindsTo=var.mount
 [Mount]

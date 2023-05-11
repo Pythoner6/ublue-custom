@@ -2,6 +2,11 @@ ARG FEDORA_MAJOR_VERSION=38
 ARG BASE_CONTAINER_URL=ghcr.io/ublue-os/silverblue-main
 ARG PKCS11_PROVIDER_VERSION=0.1
 
+FROM ${BASE_CONTAINER_URL}:${FEDORA_MAJOR_VERSION} as drivers
+
+COPY drivers.sh /tmp/drivers.sh
+RUN chmod +x /tmp/drivers.sh && /tmp/drivers.sh
+
 FROM fedora:${FEDORA_MAJOR_VERSION} AS builder
 ARG FEDORA_MAJOR_VERSION
 ARG PKCS11_PROVIDER_VERSION
@@ -39,6 +44,17 @@ RUN chmod +x /tmp/build.sh && /tmp/build.sh
 
 COPY nix.sh /tmp/nix.sh
 RUN chmod +x /tmp/nix.sh && /tmp/nix.sh
+
+RUN mkdir /tmp/xone
+COPY --from=drivers /tmp/xone/*.ko /tmp/xone/install/firmware.sh /tmp/xone/install/modprobe.conf /tmp/xone
+RUN install -D -m 644 /tmp/xone/modprobe.conf /usr/lib/modprobe.d/xone-blacklist.conf \
+ && install -D -m 755 /tmp/xone/firmware.sh /usr/sbin/xone-get-firmware.sh \
+ && xz /tmp/xone/*.ko \
+ && install -D -m 644 /tmp/xone/*.ko.xz /lib/modules/$(rpm -q kernel | sed 's/^kernel-//')/kernel/drivers/input/joystick/ \
+ && depmod $(rpm -q kernel | sed 's/^kernel-//')/ -F /lib/modules/$(rpm -q kernel | sed 's/^kernel-//')/System.map \
+ && ln -s /usr/local/lib/firmware/xow_dongle.bin /lib/firmware/xow_dongle.bin \
+ && sed -i 's/\/lib\/firmware/\/usr\/local\/lib\/firmware/g' /usr/sbin/xone-get-firmware.sh
+COPY xone-get-firmware-wrapper /usr/sbin/
 
 # clean up and finalize container build
 RUN rm -rf \
